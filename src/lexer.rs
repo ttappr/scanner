@@ -10,11 +10,15 @@ use lazy_static::lazy_static;
 
 
 lazy_static! {
+    /// A set of the keywords. Used to distinguish keywords from identifiers.
+    ///
     static ref KEYWORDS: HashSet<&'static str> = {
         vec!["if", "else", "for", "while"].into_iter().collect()
     };
 }
 
+/// Various token types. This populates the `Token.type_` field.
+///
 #[derive(Debug)]
 pub enum TokenType 
 {
@@ -28,6 +32,8 @@ pub enum TokenType
     Semicolon,
 }
 
+/// Everything returned by the lexer is a Token.
+///
 #[derive(Debug)]
 pub struct Token<'input> 
 {
@@ -39,12 +45,16 @@ pub struct Token<'input>
 
 impl<'input> Token<'input>
 {
+    /// Creates a new `Token`. Only the lexer creates these.
+    ///
     fn new(type_: TokenType, text: &'input str, line: usize, col: usize) -> Self
     {
         Token { type_, text, line, col }
     }
 }
 
+/// An enum that represents the various types of error the lexer can generate.
+///
 #[derive(Debug)]
 pub enum LexerError
 {
@@ -65,6 +75,9 @@ impl fmt::Display for LexerError
     }
 }
 
+/// When the lexer stops producing tokens, its status will be a variant of
+/// this enum.
+///
 #[derive(Debug)]
 pub enum LexerStatus
 {
@@ -73,6 +86,9 @@ pub enum LexerStatus
     Error(LexerError),
 }
 
+/// Represents the lexer and its state. Keeps track of position information in
+/// the text being scanned and produces `Token`'s.
+///
 pub struct Lexer<'input>
 {
     status  : LexerStatus,
@@ -86,6 +102,8 @@ pub struct Lexer<'input>
 
 impl<'input> Lexer<'input>
 {
+    /// Creates a new lexer to tokenize the given `text`.
+    ///
     pub fn new(text: &'input str) -> Self
     {
         Lexer { 
@@ -98,10 +116,19 @@ impl<'input> Lexer<'input>
             col     : 0,
         }
     }
+    
+    /// Returns the status of the lexer. This can be called after the lexer
+    /// stops producing tokens to find out if it parsed the full text or
+    /// encounted an error along the way.
+    ///
     pub fn status(&self) -> &LexerStatus
     {
         &self.status
     }
+    
+    /// Produces the next character to process as `Some(<ch>)`, or `None` if 
+    /// finished.
+    ///
     fn next_char(&mut self) -> Option<char>
     {
         use LexerStatus::*;
@@ -120,10 +147,19 @@ impl<'input> Lexer<'input>
             _ => { None }
         }
     }
+    
+    /// Internal method that allows the pushing back of one character. The
+    /// `next_char()` method will produce the last character pushed back.
+    ///
     fn push_back(&mut self, ch: char) 
     {
         self.buf = Some(ch);
     }
+    
+    /// Produces the next token for the lexer as `Some(<token>)`. `None` is 
+    /// returned if the lexer reached the end of the input text or an error
+    /// occurred, which can be checked using `.status()`.
+    ///
     fn next_token(&mut self) -> Option<Token<'input>>
     {
         use TokenType::*;
@@ -270,7 +306,9 @@ impl<'input> Lexer<'input>
         ret
     }
 }
-              
+             
+/// Enables the lexer to be used as an iterator in loops.
+/// 
 impl<'input> Iterator for Lexer<'input>
 {
     type Item = Token<'input>;
