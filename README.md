@@ -9,4 +9,29 @@ Alternatives to this approach include regular expressions as provided by the
 [ANTLR](https://docs.rs/antlr-rust/0.2.0/antlr_rust/) for more extensive
 text processing requirements.
 
+## Example
 
+```rust
+use lexer::*;
+
+fn main() {
+    // Text to be tokenized.
+    let text = r#"if is_true {
+                    foo_var = "hello";
+                 } else {
+                    bar_var = 0;
+                    foo_var = "String \"with\" escape";
+                 }"#;
+                 
+    let mut lexer = Lexer::new(text);
+    
+    // The lexer acts as an iterator that produces tokens.
+    for token in &mut lexer {
+        println!("{:?}", token);
+    }
+
+    // The lexer's status indicates whether the lexer finished in an error state
+    // or the end of input was reached.
+    println!("Lexer Status: {:?}", lexer.status());
+}
+```
