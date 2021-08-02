@@ -196,7 +196,7 @@ impl<'input> Lexer<'input>
                     self.line   += 1;
                     self.col     = 0;
                 },
-                ' ' | '\t' => {
+                ' ' | '\t'| '\r' => {
                     self.offset += 1;
                     self.col    += 1;
                 },
