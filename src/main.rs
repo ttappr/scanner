@@ -1,4 +1,3 @@
-#![allow(unused_imports)]
 
 mod lexer;
 use crate::lexer::*;

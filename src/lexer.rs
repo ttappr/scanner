@@ -1,4 +1,3 @@
-#![allow(unused_imports, dead_code)]
 
 use std::collections::HashSet;
 use std::collections::VecDeque;
@@ -59,7 +58,7 @@ impl<'input> Token<'input>
 #[derive(Debug)]
 pub enum LexerError
 {
-    GeneralError      { message: String },
+    //GeneralError      { message: String },
     UnrecognizedStart { message: String, line: usize, col: usize },
     InvalidEscape     { message: String, line: usize, col: usize }
 }
@@ -71,7 +70,7 @@ impl fmt::Display for LexerError
     {
         use LexerError::*;
         match self {
-            GeneralError      { message     } => write!(f, "{}", message),
+            //GeneralError      { message     } => write!(f, "{}", message),
             UnrecognizedStart { message, .. } => write!(f, "{}", message),
             InvalidEscape     { message, .. } => write!(f, "{}", message),
         }
