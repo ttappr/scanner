@@ -136,7 +136,7 @@ impl<'input> Lexer<'input>
         use LexerStatus::*;
         match self.status {
             Okay => {
-                if self.buf.len() > 0 {
+                if !self.buf.is_empty() {
                     self.buf.pop_front()
                 } else {
                     let next = self.chars.next();
