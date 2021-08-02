@@ -1,6 +1,7 @@
 #![allow(unused_imports, dead_code)]
 
 use std::collections::HashSet;
+use std::collections::VecDeque;
 use std::error::Error;
 use std::fmt;
 use std::str::Chars;
@@ -58,8 +59,9 @@ impl<'input> Token<'input>
 #[derive(Debug)]
 pub enum LexerError
 {
-    GeneralError { message : String },
+    GeneralError      { message: String },
     UnrecognizedStart { message: String, line: usize, col: usize },
+    InvalidEscape     { message: String, line: usize, col: usize }
 }
 impl Error for LexerError { }
 
@@ -71,6 +73,7 @@ impl fmt::Display for LexerError
         match self {
             GeneralError      { message     } => write!(f, "{}", message),
             UnrecognizedStart { message, .. } => write!(f, "{}", message),
+            InvalidEscape     { message, .. } => write!(f, "{}", message),
         }
     }
 }
@@ -94,7 +97,7 @@ pub struct Lexer<'input>
     status  : LexerStatus,
     text    : &'input str,
     chars   : Chars<'input>,
-    buf     : Option<char>,
+    buf     : VecDeque<char>,
     offset  : usize,
     line    : usize,
     col     : usize,
@@ -110,7 +113,7 @@ impl<'input> Lexer<'input>
             status  : LexerStatus::Okay, 
             text, 
             chars   : text.chars(),
-            buf     : None,
+            buf     : VecDeque::new(),
             offset  : 0,
             line    : 0,
             col     : 0,
@@ -134,8 +137,8 @@ impl<'input> Lexer<'input>
         use LexerStatus::*;
         match self.status {
             Okay => {
-                if self.buf.is_some() {
-                    self.buf.take()
+                if self.buf.len() > 0 {
+                    self.buf.pop_front()
                 } else {
                     let next = self.chars.next();
                     if next.is_none() {
@@ -148,12 +151,32 @@ impl<'input> Lexer<'input>
         }
     }
     
-    /// Internal method that allows the pushing back of one character. The
-    /// `next_char()` method will produce the last character pushed back.
+    /// Look ahead `ahead` number of characters.
     ///
-    fn push_back(&mut self, ch: char) 
+    fn look_ahead(&mut self, ahead: usize) -> Option<char>
     {
-        self.buf = Some(ch);
+        let mut end = false;
+        let     len = self.buf.len();
+        
+        for _ in len..ahead {
+            match self.chars.next() {
+                Some(ch) => { self.buf.push_back(ch); },
+                None     => { end = true; break; },
+            }       
+        }
+        if !end && ahead > 0 {
+            Some(self.buf[ahead - 1])
+        } else {
+            None
+        }
+    }
+    
+    /// Put a single character back in the text stream at the front. The 
+    /// `next_char()` method will return this character on its next invocation.
+    ///
+    fn put_back(&mut self, ch: char) 
+    {
+        self.buf.push_front(ch);
     }
     
     /// Produces the next token for the lexer as `Some(<token>)`. `None` is 
@@ -217,7 +240,21 @@ impl<'input> Lexer<'input>
                     while let Some(ch) = self.next_char() {
                         end += 1;
                         match ch {
-                            '\\' => { escaped = true; },
+                            '\\' => { 
+                                if let Some(la) = self.look_ahead(1) {
+                                if la != '"' {
+                                    self.status = Error(
+                                        InvalidEscape { 
+                                            message: format!(
+                                                "Invalid escape in string, \
+                                                \"\\{}\".", la),
+                                            line: self.line,
+                                            col : self.col + end,
+                                     });
+                                     break 'outer;
+                                }}
+                                escaped = true;
+                            },
                             '"'  => {
                                 if !escaped {
                                     let off  = self.offset;
@@ -244,7 +281,7 @@ impl<'input> Lexer<'input>
                         match ch {
                             'a'..='z' | 'A'..='Z' | '_' => {},
                             _ => {
-                                self.push_back(ch);
+                                self.put_back(ch);
                                 end -= 1;
 
                                 let off   = self.offset;
@@ -272,7 +309,7 @@ impl<'input> Lexer<'input>
                         match ch {
                             '0'..='9' => {},
                             _ => {
-                                self.push_back(ch);
+                                self.put_back(ch);
                                 end -= 1;
 
                                 let off   = self.offset;

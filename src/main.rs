@@ -5,7 +5,13 @@ use crate::lexer::*;
 
 fn main() {
     // Text to be tokenized.
-    let     text  = "if is_true { abracadabra = 42; } else { abracadabra = 0; }";
+    let text = r#"if is_true {
+                    foo_var = "hello";
+                 } else {
+                    bar_var = 0;
+                    foo_var = "String \"with\" escape";
+                 }"#;
+                 
     let mut lexer = Lexer::new(text);
     
     // The lexer acts as an iterator that produces tokens.
