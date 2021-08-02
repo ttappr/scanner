@@ -53,7 +53,8 @@ impl<'input> Token<'input>
     }
 }
 
-/// An enum that represents the various types of error the lexer can generate.
+/// An enum that implements Error that represents the various types of error 
+/// the lexer can generate.
 ///
 #[derive(Debug)]
 pub enum LexerError
