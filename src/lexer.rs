@@ -264,19 +264,21 @@ impl<'input> Lexer<'input>
                         end += 1;
                         match ch {
                             '\\' => { 
-                                if let Some(la) = self.look_ahead(1) {
-                                if la != '"' && la != '\\' {
-                                    self.status = Error(
-                                        InvalidEscape { 
-                                            message: format!(
-                                                "Invalid escape in string, \
-                                                \"\\{}\".", la),
-                                            line: self.line,
-                                            col : self.col + end,
-                                     });
-                                     break 'outer;
-                                }}
-                                escaped = true;
+                                if !escaped {
+                                    if let Some(la) = self.look_ahead(1) {
+                                    if la != '"' && la != '\\' {
+                                        self.status = Error(
+                                            InvalidEscape { 
+                                                message: format!(
+                                                    "Invalid escape in string, \
+                                                    \"\\{}\".", la),
+                                                line: self.line,
+                                                col : self.col + end,
+                                         });
+                                         break 'outer;
+                                    }}
+                                    escaped = true;
+                                } else { escaped = false; }
                             },
                             '"'  => {
                                 if !escaped {

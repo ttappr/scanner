@@ -5,10 +5,10 @@ use crate::lexer::*;
 fn main() {
     // Text to be tokenized.
     let text = r#"if is_true {
-                    foo_var = "hello";
+                    foo_var = "hello!";
                  } else {
                     bar_var = 0;
-                    foo_var = "String \"with\" escape";
+                    foo_var = "String \\ \"with\" escapes.";
                  }"#;
                  
     let mut lexer = Lexer::new(text);
