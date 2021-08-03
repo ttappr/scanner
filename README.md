@@ -71,7 +71,7 @@ Token {
 }
 Token {
     type_: StringLiteral,
-    text: "\"hello\"",
+    text: "\"hello!\"",
     line: 1,
     col: 30,
 }
@@ -79,7 +79,7 @@ Token {
     type_: Semicolon,
     text: ";",
     line: 1,
-    col: 37,
+    col: 38,
 }
 Token {
     type_: RParen,
@@ -137,7 +137,7 @@ Token {
 }
 Token {
     type_: StringLiteral,
-    text: "\"String \\\"with\\\" escape\"",
+    text: "\"String \\\\ \\\"with\\\" escapes.\"",
     line: 4,
     col: 30,
 }
@@ -145,7 +145,7 @@ Token {
     type_: Semicolon,
     text: ";",
     line: 4,
-    col: 54,
+    col: 59,
 }
 Token {
     type_: RParen,
