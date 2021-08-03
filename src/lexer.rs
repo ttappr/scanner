@@ -79,7 +79,7 @@ impl<'input> Token<'input>
 /// An enum that implements Error that represents the various types of error 
 /// the lexer can generate.
 ///
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum LexerError
 {
     //GeneralError      { message: String },
@@ -291,7 +291,7 @@ impl<'input> Lexer<'input>
                                     self.offset += end;
                                     self.col    += end;
                                     break 'outer;
-                                }
+                                } else { escaped = false; }
                             },
                             _    => { escaped = false; },
                         }
