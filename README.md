@@ -27,7 +27,7 @@ fn main() {
     
     // The lexer acts as an iterator that produces tokens.
     for token in &mut lexer {
-        println!("{:?}", token);
+        println!("{:#?}", token);
     }
 
     // The lexer's status indicates whether the lexer finished in an error state
@@ -39,24 +39,119 @@ fn main() {
 Output:
 
 ```console
-Token { type_: Keyword, text: "if", line: 0, col: 0 }
-Token { type_: Identifier, text: "is_true", line: 0, col: 3 }
-Token { type_: LParen, text: "{", line: 0, col: 11 }
-Token { type_: Identifier, text: "foo_var", line: 1, col: 20 }
-Token { type_: Operator, text: "=", line: 1, col: 28 }
-Token { type_: StringLiteral, text: "\"hello\"", line: 1, col: 30 }
-Token { type_: Semicolon, text: ";", line: 1, col: 37 }
-Token { type_: RParen, text: "}", line: 2, col: 17 }
-Token { type_: Keyword, text: "else", line: 2, col: 19 }
-Token { type_: LParen, text: "{", line: 2, col: 24 }
-Token { type_: Identifier, text: "bar_var", line: 3, col: 20 }
-Token { type_: Operator, text: "=", line: 3, col: 28 }
-Token { type_: NumericLiteral, text: "0", line: 3, col: 30 }
-Token { type_: Semicolon, text: ";", line: 3, col: 31 }
-Token { type_: Identifier, text: "foo_var", line: 4, col: 20 }
-Token { type_: Operator, text: "=", line: 4, col: 28 }
-Token { type_: StringLiteral, text: "\"String \\\"with\\\" escape\"", line: 4, col: 30 }
-Token { type_: Semicolon, text: ";", line: 4, col: 54 }
-Token { type_: RParen, text: "}", line: 5, col: 17 }
+Token {
+    type_: Keyword,
+    text: "if",
+    line: 0,
+    col: 0,
+}
+Token {
+    type_: Identifier,
+    text: "is_true",
+    line: 0,
+    col: 3,
+}
+Token {
+    type_: LParen,
+    text: "{",
+    line: 0,
+    col: 11,
+}
+Token {
+    type_: Identifier,
+    text: "foo_var",
+    line: 1,
+    col: 20,
+}
+Token {
+    type_: Operator,
+    text: "=",
+    line: 1,
+    col: 28,
+}
+Token {
+    type_: StringLiteral,
+    text: "\"hello\"",
+    line: 1,
+    col: 30,
+}
+Token {
+    type_: Semicolon,
+    text: ";",
+    line: 1,
+    col: 37,
+}
+Token {
+    type_: RParen,
+    text: "}",
+    line: 2,
+    col: 17,
+}
+Token {
+    type_: Keyword,
+    text: "else",
+    line: 2,
+    col: 19,
+}
+Token {
+    type_: LParen,
+    text: "{",
+    line: 2,
+    col: 24,
+}
+Token {
+    type_: Identifier,
+    text: "bar_var",
+    line: 3,
+    col: 20,
+}
+Token {
+    type_: Operator,
+    text: "=",
+    line: 3,
+    col: 28,
+}
+Token {
+    type_: NumericLiteral,
+    text: "0",
+    line: 3,
+    col: 30,
+}
+Token {
+    type_: Semicolon,
+    text: ";",
+    line: 3,
+    col: 31,
+}
+Token {
+    type_: Identifier,
+    text: "foo_var",
+    line: 4,
+    col: 20,
+}
+Token {
+    type_: Operator,
+    text: "=",
+    line: 4,
+    col: 28,
+}
+Token {
+    type_: StringLiteral,
+    text: "\"String \\\"with\\\" escape\"",
+    line: 4,
+    col: 30,
+}
+Token {
+    type_: Semicolon,
+    text: ";",
+    line: 4,
+    col: 54,
+}
+Token {
+    type_: RParen,
+    text: "}",
+    line: 5,
+    col: 17,
+}
 Lexer Status: EndOfStream
 ```

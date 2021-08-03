@@ -15,7 +15,7 @@ fn main() {
     
     // The lexer acts as an iterator that produces tokens.
     for token in &mut lexer {
-        println!("{:?}", token);
+        println!("{:#?}", token);
     }
 
     // The lexer's status indicates whether the lexer finished in an error state
