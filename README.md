@@ -30,7 +30,7 @@ fn main() {
         println!("{:#?}", token);
     }
 
-    // The lexer's status indicates whether the lexer finished in an error state
+    // The lexer's status indicates whether the lexer encountered an error
     // or the end of input was reached.
     println!("Lexer Status: {:?}", lexer.status());
 }
