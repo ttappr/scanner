@@ -1,4 +1,6 @@
 
+#![allow(dead_code)]
+
 use std::collections::HashSet;
 use std::collections::VecDeque;
 use std::error::Error;
@@ -19,7 +21,7 @@ lazy_static! {
 
 /// Various token types. This populates the `Token.type_` field.
 ///
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum TokenType 
 {
     Keyword,
@@ -50,6 +52,27 @@ impl<'input> Token<'input>
     fn new(type_: TokenType, text: &'input str, line: usize, col: usize) -> Self
     {
         Token { type_, text, line, col }
+    }
+    
+    /// Returns the token type.
+    ///
+    pub fn token_type(&self) -> TokenType
+    {
+        self.type_
+    }
+    
+    /// Returns the text for the token.
+    ///
+    pub fn text(&self) -> &str
+    {
+        self.text
+    }
+    
+    /// Returns the line and column offsets for the start of the token text.
+    ///
+    pub fn pos(&self) -> (usize, usize)
+    {
+        (self.line, self.col)
     }
 }
 
