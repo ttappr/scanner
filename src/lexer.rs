@@ -265,7 +265,7 @@ impl<'input> Lexer<'input>
                         match ch {
                             '\\' => { 
                                 if let Some(la) = self.look_ahead(1) {
-                                if la != '"' {
+                                if la != '"' && la != '\\' {
                                     self.status = Error(
                                         InvalidEscape { 
                                             message: format!(
